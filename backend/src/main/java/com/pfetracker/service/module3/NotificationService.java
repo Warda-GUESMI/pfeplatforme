@@ -1,0 +1,191 @@
+package com.pfetracker.service.module3;
+
+import com.pfetracker.dto.module3.MessageDTO;
+import com.pfetracker.dto.module3.NotificationDTO;
+import com.pfetracker.dto.module3.PageResponse;
+import com.pfetracker.entity.module3.Comment;
+import com.pfetracker.entity.module3.Meeting;
+import com.pfetracker.entity.module3.Notification;
+import com.pfetracker.entity.module3.PFE;
+import com.pfetracker.entity.module3.Task;
+import com.pfetracker.mapper.module3.NotificationMapper;
+import com.pfetracker.repository.module3.NotificationRepository;
+import com.pfetracker.repository.module3.UserRepository;
+import com.pfetracker.websocket.module3.NotificationWebSocketController;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class NotificationService {
+
+    private final NotificationRepository notificationRepository;
+    private final NotificationMapper notificationMapper;
+    private final NotificationWebSocketController webSocketController;
+    private final UserRepository userRepository;
+    private final EmailService emailService;
+
+    public NotificationDTO createNotification(Long userId, String message, Notification.NotificationType type,
+                                               Long relatedId, String relatedType, String actionUrl) {
+        Notification notification = Notification.builder()
+                .userId(userId)
+                .message(message)
+                .type(type)
+                .isRead(false)
+                .relatedId(relatedId)
+                .relatedType(relatedType)
+                .actionUrl(actionUrl)
+                .build();
+
+        Notification saved = notificationRepository.save(notification);
+        NotificationDTO dto = notificationMapper.toDTO(saved);
+
+        webSocketController.sendNotification(userId, dto);
+        log.info("Notification created: id={}, user={}, type={}", saved.getId(), userId, type);
+
+        return dto;
+    }
+
+    public void createMessageNotification(Long receiverId, MessageDTO message) {
+        String msg = "Nouveau message de " + message.getSenderName();
+        createNotification(receiverId, msg, Notification.NotificationType.MESSAGE,
+                message.getId(), "MESSAGE", "/messages/" + message.getPfeId());
+    }
+
+    public void createCommentNotification(Long userId, Comment comment, Task task) {
+        String msg = "Nouveau commentaire sur la tÃ¢che: " + task.getTitle();
+        createNotification(userId, msg, Notification.NotificationType.TASK,
+                comment.getId(), "COMMENT", "/tasks/" + task.getId() + "/comments");
+    }
+
+    public void createMentionNotification(Long userId, Comment comment, PFE pfe) {
+        String msg = "Vous avez Ã©tÃ© mentionnÃ© dans un commentaire";
+        createNotification(userId, msg, Notification.NotificationType.TASK,
+                comment.getId(), "COMMENT", "/tasks/" + comment.getTaskId() + "/comments");
+    }
+
+    public void createMeetingNotification(Long userId, Meeting meeting, String action) {
+        String msg = switch (action) {
+            case "CREATED" -> "Nouvelle rÃ©union planifiÃ©e: " + meeting.getTitle();
+            case "UPDATED" -> "RÃ©union modifiÃ©e: " + meeting.getTitle();
+            case "CANCELLED" -> "RÃ©union annulÃ©e: " + meeting.getTitle();
+            case "REMINDER_24H" -> "Rappel: RÃ©union dans 24h - " + meeting.getTitle();
+            case "REMINDER_15MIN" -> "Rappel: RÃ©union dans 15 min - " + meeting.getTitle();
+            default -> "Mise Ã  jour de rÃ©union: " + meeting.getTitle();
+        };
+
+        Notification.NotificationType type = action.contains("REMINDER") 
+                ? Notification.NotificationType.MEETING 
+                : Notification.NotificationType.MEETING;
+
+        createNotification(userId, msg, type, meeting.getId(), "MEETING", "/meetings/" + meeting.getId());
+    }
+
+    public void createTaskNotification(Long userId, Task task, String action) {
+        String msg = switch (action) {
+            case "ASSIGNED" -> "Nouvelle tÃ¢che assignÃ©e: " + task.getTitle();
+            case "SUBMITTED" -> "TÃ¢che soumise pour rÃ©vision: " + task.getTitle();
+            case "VALIDATED" -> "TÃ¢che validÃ©e: " + task.getTitle();
+            case "TO_CORRECT" -> "Corrections demandÃ©es: " + task.getTitle();
+            default -> "Mise Ã  jour de tÃ¢che: " + task.getTitle();
+        };
+
+        createNotification(userId, msg, Notification.NotificationType.TASK,
+                task.getId(), "TASK", "/tasks/" + task.getId());
+    }
+
+    public void createAlertNotification(Long userId, String alertMessage, String severity) {
+        createNotification(userId, alertMessage, Notification.NotificationType.ALERT,
+                null, "ALERT", "/dashboard");
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<NotificationDTO> getUserNotifications(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Notification> notifications = notificationRepository.findByUserId(userId, pageable);
+
+        return PageResponse.<NotificationDTO>builder()
+                .content(notificationMapper.toDTOList(notifications.getContent()))
+                .pageNumber(notifications.getNumber())
+                .pageSize(notifications.getSize())
+                .totalElements(notifications.getTotalElements())
+                .totalPages(notifications.getTotalPages())
+                .last(notifications.isLast())
+                .first(notifications.isFirst())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<NotificationDTO> getUnreadNotifications(Long userId) {
+        return notificationMapper.toDTOList(notificationRepository.findUnreadByUserId(userId));
+    }
+
+    @Transactional(readOnly = true)
+    public Long getUnreadCount(Long userId) {
+        return notificationRepository.countUnreadByUserId(userId);
+    }
+
+    public void markAsRead(List<Long> notificationIds, Long userId) {
+        notificationRepository.markAsRead(notificationIds, userId, LocalDateTime.now());
+        log.info("Notifications {} marked as read by user {}", notificationIds, userId);
+    }
+
+    public void markAllAsRead(Long userId) {
+        notificationRepository.markAllAsRead(userId, LocalDateTime.now());
+        log.info("All notifications marked as read by user {}", userId);
+    }
+
+    @Async("emailExecutor")
+    public void sendEmailNotification(Long userId, String subject, String body) {
+        userRepository.findById(userId).ifPresent(user -> {
+            if (user.getEmail() != null) {
+                emailService.sendEmail(user.getEmail(), subject, body);
+                log.info("Email sent to user {}: {}", userId, subject);
+            }
+        });
+    }
+
+    @Async("emailExecutor")
+    public void sendMeetingReminderEmail(Long userId, Meeting meeting, int hoursBefore) {
+        String subject = "Rappel de rÃ©union - " + meeting.getTitle();
+        String body = String.format(
+            "Bonjour,%n%n" +
+            "Rappel: Vous avez une rÃ©union dans %d heures.%n%n" +
+            "Titre: %s%n" +
+            "Date: %s%n" +
+            "DurÃ©e: %d minutes%n" +
+            "Lien: %s%n%n" +
+            "Cordialement,%nPFETracker",
+            hoursBefore, meeting.getTitle(), meeting.getMeetingDate(), 
+            meeting.getDuration(), meeting.getMeetingLink() != null ? meeting.getMeetingLink() : "Non spÃ©cifiÃ©"
+        );
+        sendEmailNotification(userId, subject, body);
+    }
+
+    @Async("emailExecutor")
+    public void sendCriticalAlertEmail(Long userId, String alertMessage) {
+        String subject = "âš ï¸ Alerte critique - PFETracker";
+        String body = String.format(
+            "Bonjour,%n%n" +
+            "Une alerte critique a Ã©tÃ© dÃ©tectÃ©e:%n%n" +
+            "%s%n%n" +
+            "Veuillez consulter votre tableau de bord pour plus de dÃ©tails.%n%n" +
+            "Cordialement,%nPFETracker",
+            alertMessage
+        );
+        sendEmailNotification(userId, subject, body);
+    }
+}
+
