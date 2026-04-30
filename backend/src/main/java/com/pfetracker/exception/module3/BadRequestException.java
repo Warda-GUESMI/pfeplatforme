@@ -1,0 +1,8 @@
+package com.pfetracker.exception.module3;
+
+public class BadRequestException extends RuntimeException {
+    public BadRequestException(String message) {
+        super(message);
+    }
+}
+
