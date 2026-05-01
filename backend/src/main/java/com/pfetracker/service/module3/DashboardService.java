@@ -247,5 +247,37 @@ public class DashboardService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    public com.pfetracker.dto.module3.DashboardDeptManagerDTO getDeptManagerDashboard(Long managerId) {
+        // TODO: Implement department manager dashboard
+        // This requires access to the user's department and all PFEs in that department
+        return com.pfetracker.dto.module3.DashboardDeptManagerDTO.builder()
+                .managerId(managerId)
+                .totalStudents(0)
+                .activePFEs(0)
+                .completedPFEs(0)
+                .delayedPFEs(0)
+                .averageProgress(0.0)
+                .totalMeetings(0L)
+                .completedMeetings(0L)
+                .build();
+    }
+
+    public com.pfetracker.dto.module3.DashboardDirectorDTO getDirectorDashboard(Long directorId) {
+        // TODO: Implement director dashboard
+        // This requires access to all departments and their PFEs
+        return com.pfetracker.dto.module3.DashboardDirectorDTO.builder()
+                .directorId(directorId)
+                .totalDepartments(0)
+                .totalStudents(0)
+                .totalPFEs(0)
+                .completedPFEs(0)
+                .delayedPFEs(0)
+                .globalAverageProgress(0.0)
+                .totalMeetings(0L)
+                .completedMeetings(0L)
+                .criticalAlertCount(0)
+                .build();
+    }
 }
 

@@ -15,11 +15,15 @@ C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\ser
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\entity\module3\Message.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\TaskSummaryDTO.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\service\module3\EmailService.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\MeetingStatisticsDTO.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\entity\module3\Task.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\DepartmentStatisticsDTO.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\entity\module3\enums\NotificationType.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\service\module3\MessageService.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\entity\module3\UserNotificationPreference.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\exception\module3\BadRequestException.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\MessageDTO.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\entity\module3\ArchivedMessage.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\security\module3\SecurityUtils.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\mapper\module3\NotificationMapper.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\security\module3\JwtAuthenticationFilter.java
@@ -28,10 +32,15 @@ C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\entity\module3\Notification.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\repository\module3\UserRepository.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\AlertDTO.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\repository\module3\UserNotificationPreferenceRepository.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\UserNotificationPreferenceDTO.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\mapper\module3\UserNotificationPreferenceMapper.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\SupervisorDashboardDTO.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\repository\module3\MessageRepository.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\CreateCommentRequest.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\repository\module3\ArchivedMessageRepository.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\service\module3\CommentService.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\DashboardDirectorDTO.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\entity\module3\Meeting.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\service\module3\DashboardService.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\exception\module3\UnauthorizedException.java
@@ -43,6 +52,7 @@ C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\security\module3\JwtTokenProvider.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\config\module3\OpenApiConfig.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\CommentDTO.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\DashboardDeptManagerDTO.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\repository\module3\MeetingRepository.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\ApiResponse.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\exception\module3\GlobalExceptionHandler.java
@@ -53,6 +63,7 @@ C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\SendMessageRequest.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\config\module3\AsyncConfig.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\entity\module3\PFE.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\scheduler\module3\MessageArchivingScheduler.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\config\module3\WebSocketConfig.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\controller\module3\CommentController.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\exception\module3\ResourceNotFoundException.java
@@ -71,3 +82,4 @@ C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\map
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\websocket\module3\NotificationWebSocketController.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\dto\module3\CreateMeetingRequest.java
 C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\repository\module3\PFERepository.java
+C:\Users\Warda Guesmi\Bureau\PFETracker\backend\src\main\java\com\pfetracker\service\module3\UserNotificationPreferenceService.java
